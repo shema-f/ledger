@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
 import android.graphics.pdf.PdfDocument
 import android.os.Environment
 import androidx.core.content.ContextCompat
@@ -79,18 +81,56 @@ object PdfReportGenerator {
         val margin = 40f
         val contentWidth = 515f
 
-        // Header Section
-        val logoDrawable = ContextCompat.getDrawable(context, R.drawable.ic_imari_logo)
-        if (logoDrawable != null) {
-            logoDrawable.setBounds(margin.toInt(), yPos.toInt() - 10, (margin + 36f).toInt(), (yPos + 26f).toInt())
-            logoDrawable.draw(canvas)
-            canvas.drawText("IMARI", margin + 44f, yPos + 10f, titlePaint)
-            canvas.drawText("Smart Financial Ledger for Merchants", margin + 44f, yPos + 24f, subtitlePaint)
-            yPos += 36f
-        } else {
-            canvas.drawText("IMARI - Smart Financial Ledger for Merchants", margin, yPos, titlePaint)
-            yPos += 22f
+        // Header Section with Abstract Geometric Emblem
+        val emblemSize = 32f
+        val emblemRect = RectF(margin, yPos - 5f, margin + emblemSize, yPos + emblemSize - 5f)
+
+        val emblemBgPaint = Paint().apply {
+            color = Color.rgb(15, 23, 42) // Slate 900
+            style = Paint.Style.FILL
+            isAntiAlias = true
         }
+        val emblemAccPaint1 = Paint().apply {
+            color = Color.rgb(16, 185, 129) // Emerald Accent
+            style = Paint.Style.FILL
+            isAntiAlias = true
+        }
+        val emblemAccPaint2 = Paint().apply {
+            color = Color.rgb(245, 158, 11) // Amber Gold Accent
+            style = Paint.Style.FILL
+            isAntiAlias = true
+        }
+
+        val logoResId = context.resources.getIdentifier("ic_ifaranga_logo", "drawable", context.packageName).let {
+            if (it != 0) it else context.resources.getIdentifier("ic_imari_logo", "drawable", context.packageName)
+        }
+        val logoDrawable = if (logoResId != 0) ContextCompat.getDrawable(context, logoResId) else null
+        if (logoDrawable != null) {
+            logoDrawable.setBounds(margin.toInt(), yPos.toInt() - 5, (margin + emblemSize).toInt(), (yPos + emblemSize - 5f).toInt())
+            logoDrawable.draw(canvas)
+        } else {
+            // Draw Abstract Geometric Emblem
+            canvas.drawRoundRect(emblemRect, 6f, 6f, emblemBgPaint)
+            val path1 = Path().apply {
+                moveTo(margin + 8f, yPos + 22f)
+                lineTo(margin + 16f, yPos + 6f)
+                lineTo(margin + 24f, yPos + 22f)
+                close()
+            }
+            canvas.drawPath(path1, emblemAccPaint1)
+            val path2 = Path().apply {
+                moveTo(margin + 16f, yPos + 10f)
+                lineTo(margin + 26f, yPos + 24f)
+                lineTo(margin + 6f, yPos + 24f)
+                close()
+            }
+            canvas.drawPath(path2, emblemAccPaint2)
+        }
+
+        canvas.drawText("IFARANGA", margin + emblemSize + 12f, yPos + 10f, titlePaint)
+        canvas.drawText("Know your money. / Amafaranga yawe. Uyamenye.", margin + emblemSize + 12f, yPos + 24f, subtitlePaint)
+        yPos += 38f
+
         canvas.drawText("Merchant Shop Name: ${data.shopName.ifBlank { "Smart Merchant" }}", margin, yPos, subtitlePaint)
         yPos += 18f
         val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
@@ -195,7 +235,7 @@ object PdfReportGenerator {
             File(context.cacheDir, "reports").apply { if (!exists()) mkdirs() }
         }
 
-        val reportFile = File(reportsDir, "Imari_Bank_Audit_Report_${System.currentTimeMillis()}.pdf")
+        val reportFile = File(reportsDir, "IFARANGA_Financial_Statement_${System.currentTimeMillis()}.pdf")
         val outputStream = FileOutputStream(reportFile)
         pdfDocument.writeTo(outputStream)
         pdfDocument.close()
@@ -215,6 +255,6 @@ object PdfReportGenerator {
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        context.startActivity(Intent.createChooser(intent, "Share Imari Financial Statement PDF"))
+        context.startActivity(Intent.createChooser(intent, "Share IFARANGA Financial Statement PDF"))
     }
 }

@@ -1,5 +1,10 @@
 package com.example.myapplication.ui.dashboard
 
+import com.example.myapplication.domain.intelligence.FinancialHealthReport
+import com.example.myapplication.ui.components.FinancialHealthScoreCard
+import com.example.myapplication.ui.components.FinancialPulseCard
+import com.example.myapplication.ui.components.IfarangaIntelligenceCard
+import com.example.myapplication.ui.components.IfarangaLogo
 import com.example.myapplication.ui.components.ImariLogo
 import com.example.myapplication.ui.theme.*
 import com.example.myapplication.util.LocalStrings
@@ -92,11 +97,13 @@ fun DashboardScreen(
     val summary by viewModel.dashboardSummary.collectAsState()
     val recentRecords by viewModel.recentLedgerRecords.collectAsState()
     val customers by viewModel.customers.collectAsState()
+    val healthReport by viewModel.financialHealthReport.collectAsState()
 
     var activeDialog by remember { mutableStateOf(ActiveQuickDialog.NONE) }
 
     DashboardContent(
         summary = summary,
+        healthReport = healthReport,
         recentRecords = recentRecords,
         customers = customers,
         onAddDebtClick = { activeDialog = ActiveQuickDialog.ADD_DEBT },
@@ -144,6 +151,19 @@ fun DashboardScreen(
 @Composable
 fun DashboardContent(
     summary: DashboardSummary,
+    healthReport: FinancialHealthReport = FinancialHealthReport(
+        overallScore = 82,
+        statusTitle = "Strong",
+        cashFlowScore = 91,
+        debtScore = 74,
+        savingsScore = 80,
+        expensesScore = 78,
+        profitabilityScore = 86,
+        keyInsight = "🧠 IFARANGA Noticed: Revenue is exceeding expenses. Excellent liquidity maintained!",
+        forecastExpectedIncome = 3500000.0,
+        forecastExpectedExpenses = 1800000.0,
+        forecastNetRemaining = 1700000.0
+    ),
     recentRecords: List<LedgerRecord>,
     customers: List<Customer>,
     onAddDebtClick: () -> Unit,
@@ -161,11 +181,38 @@ fun DashboardContent(
     ) {
         item {
             Spacer(modifier = Modifier.height(12.dp))
-            ImariLogo(
+            IfarangaLogo(
                 iconSize = 40.dp,
                 showTagline = true,
                 isHorizontal = true,
                 modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FinancialPulseCard(
+                moneyIn = healthReport.forecastExpectedIncome / 30.0,
+                moneyOut = healthReport.forecastExpectedExpenses / 30.0,
+                netMovement = (healthReport.forecastExpectedIncome - healthReport.forecastExpectedExpenses) / 30.0,
+                statusTitle = healthReport.statusTitle,
+                isHealthy = healthReport.overallScore >= 60,
+                microInsight = "Daily average flow calculated across all active accounts."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            FinancialHealthScoreCard(
+                overallScore = healthReport.overallScore,
+                statusTitle = healthReport.statusTitle,
+                cashFlowScore = healthReport.cashFlowScore,
+                debtScore = healthReport.debtScore,
+                savingsScore = healthReport.savingsScore,
+                expensesScore = healthReport.expensesScore,
+                profitabilityScore = healthReport.profitabilityScore
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            IfarangaIntelligenceCard(
+                keyInsight = healthReport.keyInsight,
+                expectedInflow = healthReport.forecastExpectedIncome,
+                expectedExpenses = healthReport.forecastExpectedExpenses,
+                expectedRemaining = healthReport.forecastNetRemaining,
+                cashShortageAlert = healthReport.forecastAlert
             )
             Spacer(modifier = Modifier.height(8.dp))
             MerchantSummaryCard(summary = summary)

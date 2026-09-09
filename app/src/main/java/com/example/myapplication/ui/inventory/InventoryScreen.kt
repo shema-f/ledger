@@ -1,6 +1,7 @@
 package com.example.myapplication.ui.inventory
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PointOfSale
+import androidx.compose.material.icons.rounded.QrCodeScanner
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.AlertDialog
@@ -53,7 +55,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -88,6 +92,9 @@ fun InventoryScreen(
     var showPosDialog by remember { mutableStateOf(false) }
     var posProduct by remember { mutableStateOf<Product?>(null) }
 
+    var showBarcodeScanner by remember { mutableStateOf(false) }
+
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
 
     Scaffold(
@@ -135,25 +142,46 @@ fun InventoryScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Search Bar
-            OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { viewModel.setSearchQuery(it) },
+            // Search Bar & Camera Barcode Scanner Action Button
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(localizedString("search_products")) },
-                leadingIcon = {
-                    Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
-                },
-                trailingIcon = {
-                    if (searchQuery.isNotEmpty()) {
-                        IconButton(onClick = { viewModel.setSearchQuery("") }) {
-                            Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear")
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { viewModel.setSearchQuery(it) },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text(localizedString("search_products")) },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
+                    },
+                    trailingIcon = {
+                        if (searchQuery.isNotEmpty()) {
+                            IconButton(onClick = { viewModel.setSearchQuery("") }) {
+                                Icon(imageVector = Icons.Rounded.Clear, contentDescription = "Clear")
+                            }
                         }
-                    }
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(12.dp)
-            )
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(
+                    onClick = { showBarcodeScanner = true },
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.QrCodeScanner,
+                        contentDescription = "Scan Barcode",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -222,13 +250,41 @@ fun InventoryScreen(
         }
     }
 
+    // Barcode Scanner Modal Dialog
+    if (showBarcodeScanner) {
+        BarcodeScannerModal(
+            onDismiss = { showBarcodeScanner = false },
+            onBarcodeScanned = { scannedBarcode ->
+                showBarcodeScanner = false
+                coroutineScope.launch {
+                    val foundProduct = viewModel.findProductByBarcode(scannedBarcode)
+                    if (foundProduct != null) {
+                        posProduct = foundProduct
+                        showPosDialog = true
+                    } else {
+                        editingProduct = Product(
+                            id = 0,
+                            name = "",
+                            barcode = scannedBarcode,
+                            buyingPrice = 0.0,
+                            sellingPrice = 0.0,
+                            currentStock = 0,
+                            minAlertStock = 5
+                        )
+                        showAddEditDialog = true
+                    }
+                }
+            }
+        )
+    }
+
     // Add / Edit Product Modal Dialog
     if (showAddEditDialog) {
         AddEditProductDialog(
             product = editingProduct,
             onDismiss = { showAddEditDialog = false },
             onSave = { product ->
-                if (editingProduct == null) {
+                if (editingProduct == null || editingProduct?.id == 0L) {
                     viewModel.addProduct(product)
                     Toast.makeText(context, "Added product ${product.name}", Toast.LENGTH_SHORT).show()
                 } else {
@@ -441,7 +497,7 @@ fun AddEditProductDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = if (product == null) "Add New Product" else "Edit Product")
+            Text(text = if (product == null || product.id == 0L) "Add New Product" else "Edit Product")
         },
         text = {
             Column(

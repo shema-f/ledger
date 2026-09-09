@@ -63,6 +63,10 @@ class InventoryViewModel(
         _showLowStockOnly.value = enabled
     }
 
+    suspend fun findProductByBarcode(barcode: String): Product? {
+        return productRepository.getProductByBarcode(barcode)
+    }
+
     fun addProduct(product: Product) {
         viewModelScope.launch {
             productRepository.insertProduct(product)

@@ -1,14 +1,12 @@
 package com.example.myapplication.ui.navigation
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,23 +17,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.AccountBalance
 import androidx.compose.material.icons.rounded.BarChart
 import androidx.compose.material.icons.rounded.Dashboard
-import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.Inventory
-import androidx.compose.material.icons.rounded.LightMode
 import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.LockReset
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.People
+import androidx.compose.material.icons.rounded.Psychology
 import androidx.compose.material.icons.rounded.QrCode
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,14 +41,10 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -59,43 +53,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.myapplication.domain.model.TransactionType
 import com.example.myapplication.service.FinancialSms
 import com.example.myapplication.service.PaymentAlertManager
 import com.example.myapplication.ui.auth.AuthViewModel
-import com.example.myapplication.ui.auth.ImariAuthScreen
-import com.example.myapplication.ui.components.ImariLogo
+import com.example.myapplication.ui.business.BusinessHubScreen
+import com.example.myapplication.ui.components.IfarangaLogo
 import com.example.myapplication.ui.customer.CustomerDetailScreen
-import com.example.myapplication.ui.customer.CustomerListScreen
 import com.example.myapplication.ui.customer.CustomerViewModel
 import com.example.myapplication.ui.dashboard.DashboardScreen
 import com.example.myapplication.ui.dashboard.DashboardViewModel
-import com.example.myapplication.ui.inventory.InventoryScreen
+import com.example.myapplication.ui.insights.InsightsScreen
 import com.example.myapplication.ui.inventory.InventoryViewModel
-import com.example.myapplication.ui.loans.LoanDebtScreen
 import com.example.myapplication.ui.loans.LoanDebtViewModel
 import com.example.myapplication.ui.momo.MoMoFeedViewModel
 import com.example.myapplication.ui.momo.MoMoLiveFeedScreen
-import com.example.myapplication.ui.onboarding.NotificationOnboardingScreen
-import com.example.myapplication.ui.reconciliation.SmsReconciliationBottomSheet
+import com.example.myapplication.ui.money.MoneyFlowScreen
+import com.example.myapplication.ui.money.MoneyFlowViewModel
+import com.example.myapplication.ui.profile.ProfileScreen
 import com.example.myapplication.ui.reconciliation.SmsReconciliationViewModel
 import com.example.myapplication.ui.reports.ReportsScreen
 import com.example.myapplication.ui.reports.ReportsViewModel
-import com.example.myapplication.ui.theme.MyApplicationTheme
-import com.example.myapplication.ui.theme.PrimaryEmeraldTealLight
 import com.example.myapplication.util.AppLanguage
 import com.example.myapplication.util.LanguageManager
 import com.example.myapplication.util.LocalStrings
@@ -106,6 +95,7 @@ enum class AppDrawerItem(
     val icon: ImageVector
 ) {
     DASHBOARD("Dashboard", Icons.Rounded.Dashboard),
+    INSIGHTS("IFARANGA Intelligence", Icons.Rounded.Psychology),
     INVENTORY("Inventory & POS Lite", Icons.Rounded.Inventory),
     CUSTOMERS("Customer Ledger & Debts", Icons.Rounded.People),
     LOANS("Loans & Business Liabilities", Icons.Rounded.AccountBalance),
@@ -114,7 +104,7 @@ enum class AppDrawerItem(
     SECURITY("Security & Permissions", Icons.Rounded.Lock)
 }
 
-@ExperimentalMaterial3Api
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation(
     dashboardViewModel: DashboardViewModel,
@@ -122,6 +112,7 @@ fun AppNavigation(
     inventoryViewModel: InventoryViewModel,
     loanDebtViewModel: LoanDebtViewModel,
     momoFeedViewModel: MoMoFeedViewModel,
+    moneyFlowViewModel: MoneyFlowViewModel,
     reconciliationViewModel: SmsReconciliationViewModel? = null,
     reportsViewModel: ReportsViewModel? = null,
     authViewModel: AuthViewModel? = null,
@@ -130,15 +121,23 @@ fun AppNavigation(
     onToggleDarkMode: ((Boolean) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
-    var currentTab by remember { mutableStateOf(AppDrawerItem.DASHBOARD) }
+    var selectedTab by remember { mutableStateOf(IfarangaTab.HOME) }
     var selectedCustomerId by remember { mutableStateOf<Long?>(null) }
+    var drawerItemOverride by remember { mutableStateOf<AppDrawerItem?>(null) }
+    var showQuickActionSheet by remember { mutableStateOf(false) }
+
+    // Quick Action Dialog States
+    var quickActionDialogType by remember { mutableStateOf<QuickActionType?>(null) }
+    var quickActionAmountText by remember { mutableStateOf("") }
+    var quickActionDescText by remember { mutableStateOf("") }
+
     var liveAlertSms by remember { mutableStateOf<FinancialSms?>(null) }
     var isDarkTheme by remember { mutableStateOf(isDarkMode) }
 
     val currentLanguage by LanguageManager.currentLanguage.collectAsState()
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         PaymentAlertManager.livePaymentAlerts.collect { sms ->
@@ -156,15 +155,13 @@ fun AppNavigation(
                 Column(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    // Drawer Header
                     DrawerHeader(
-                        shopName = "Imari Merchant",
+                        shopName = "IFARANGA Merchant",
                         currency = "RWF"
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Drawer Items
                     Column(
                         modifier = Modifier
                             .weight(1f)
@@ -176,7 +173,7 @@ fun AppNavigation(
                                 label = {
                                     Text(
                                         text = LocalStrings.get(item.title, currentLanguage),
-                                        fontWeight = if (currentTab == item) FontWeight.Bold else FontWeight.Medium
+                                        fontWeight = FontWeight.Medium
                                     )
                                 },
                                 icon = {
@@ -185,20 +182,26 @@ fun AppNavigation(
                                         contentDescription = item.title
                                     )
                                 },
-                                selected = currentTab == item && selectedCustomerId == null,
+                                selected = drawerItemOverride == item,
                                 onClick = {
                                     coroutineScope.launch {
                                         drawerState.close()
                                     }
                                     selectedCustomerId = null
-                                    currentTab = item
+                                    drawerItemOverride = item
+                                    when (item) {
+                                        AppDrawerItem.DASHBOARD -> selectedTab = IfarangaTab.HOME
+                                        AppDrawerItem.INSIGHTS -> selectedTab = IfarangaTab.INSIGHTS
+                                        AppDrawerItem.INVENTORY, AppDrawerItem.LOANS, AppDrawerItem.CUSTOMERS -> selectedTab = IfarangaTab.BUSINESS
+                                        AppDrawerItem.SECURITY -> selectedTab = IfarangaTab.PROFILE
+                                        else -> {}
+                                    }
                                 },
                                 modifier = Modifier.padding(vertical = 2.dp)
                             )
                         }
                     }
 
-                    // Drawer Footer
                     DrawerFooter(
                         currentLanguage = currentLanguage,
                         onLanguageChange = { newLanguage ->
@@ -221,7 +224,13 @@ fun AppNavigation(
                 TopAppBar(
                     title = {
                         Text(
-                            text = if (selectedCustomerId != null) LocalStrings.get("Customer Detail", currentLanguage) else LocalStrings.get(currentTab.title, currentLanguage),
+                            text = if (selectedCustomerId != null) {
+                                LocalStrings.get("Customer Detail", currentLanguage)
+                            } else if (drawerItemOverride != null && drawerItemOverride != AppDrawerItem.DASHBOARD) {
+                                LocalStrings.get(drawerItemOverride!!.title, currentLanguage)
+                            } else {
+                                selectedTab.label
+                            },
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -244,7 +253,7 @@ fun AppNavigation(
                             ) {
                                 Icon(
                                     imageVector = Icons.Rounded.Menu,
-                                    contentDescription = "Open Navigation Menu"
+                                    contentDescription = "Open Menu"
                                 )
                             }
                         }
@@ -254,6 +263,20 @@ fun AppNavigation(
                         titleContentColor = MaterialTheme.colorScheme.onSurface
                     )
                 )
+            },
+            bottomBar = {
+                if (selectedCustomerId == null) {
+                    IfarangaBottomBar(
+                        selectedTab = selectedTab,
+                        onTabSelected = { newTab ->
+                            drawerItemOverride = null
+                            selectedTab = newTab
+                        },
+                        onQuickActionClick = {
+                            showQuickActionSheet = true
+                        }
+                    )
+                }
             }
         ) { paddingValues ->
             val currentCustId = selectedCustomerId
@@ -264,283 +287,263 @@ fun AppNavigation(
                     onNavigateBack = { selectedCustomerId = null },
                     modifier = Modifier.padding(paddingValues)
                 )
+            } else if (drawerItemOverride == AppDrawerItem.MOMO_FEED) {
+                MoMoLiveFeedScreen(
+                    viewModel = momoFeedViewModel,
+                    modifier = Modifier.padding(paddingValues)
+                )
+            } else if (drawerItemOverride == AppDrawerItem.REPORTS) {
+                if (reportsViewModel != null) {
+                    ReportsScreen(
+                        viewModel = reportsViewModel,
+                        authViewModel = authViewModel,
+                        modifier = Modifier.padding(paddingValues)
+                    )
+                }
             } else {
                 AnimatedContent(
-                    targetState = currentTab,
+                    targetState = selectedTab,
                     transitionSpec = { fadeIn() togetherWith fadeOut() },
-                    label = "ScreenTransition",
+                    label = "5TabScreenTransition",
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
                 ) { targetTab ->
                     when (targetTab) {
-                        AppDrawerItem.DASHBOARD -> {
+                        IfarangaTab.HOME -> {
                             DashboardScreen(
                                 viewModel = dashboardViewModel,
-                                onNavigateToMoMoFeed = { currentTab = AppDrawerItem.MOMO_FEED },
-                                onNavigateToCustomers = { currentTab = AppDrawerItem.CUSTOMERS },
+                                onNavigateToMoMoFeed = { drawerItemOverride = AppDrawerItem.MOMO_FEED },
+                                onNavigateToCustomers = {
+                                    drawerItemOverride = null
+                                    selectedTab = IfarangaTab.BUSINESS
+                                },
                                 onCustomerClick = { customerId ->
                                     selectedCustomerId = customerId
                                 }
                             )
                         }
-                        AppDrawerItem.INVENTORY -> {
-                            InventoryScreen(
-                                viewModel = inventoryViewModel
+                        IfarangaTab.MONEY -> {
+                            MoneyFlowScreen(
+                                viewModel = moneyFlowViewModel
                             )
                         }
-                        AppDrawerItem.CUSTOMERS -> {
-                            CustomerListScreen(
-                                viewModel = customerViewModel,
+                        IfarangaTab.BUSINESS -> {
+                            val initialSubTab = when (drawerItemOverride) {
+                                AppDrawerItem.LOANS -> 1
+                                AppDrawerItem.CUSTOMERS -> 2
+                                else -> 0
+                            }
+                            BusinessHubScreen(
+                                inventoryViewModel = inventoryViewModel,
+                                loanDebtViewModel = loanDebtViewModel,
+                                customerViewModel = customerViewModel,
+                                initialTabOrdinal = initialSubTab,
                                 onCustomerClick = { customerId ->
                                     selectedCustomerId = customerId
                                 }
                             )
                         }
-                        AppDrawerItem.LOANS -> {
-                            LoanDebtScreen(
-                                viewModel = loanDebtViewModel
+                        IfarangaTab.INSIGHTS -> {
+                            InsightsScreen(
+                                viewModel = dashboardViewModel
                             )
                         }
-                        AppDrawerItem.MOMO_FEED -> {
-                            MoMoLiveFeedScreen(
-                                viewModel = momoFeedViewModel
+                        IfarangaTab.PROFILE -> {
+                            ProfileScreen(
+                                authViewModel = authViewModel,
+                                isDarkMode = isDarkTheme,
+                                onToggleDarkMode = { newDark ->
+                                    isDarkTheme = newDark
+                                    onToggleDarkMode?.invoke(newDark)
+                                },
+                                onLockApp = onLockApp
                             )
-                        }
-                        AppDrawerItem.REPORTS -> {
-                            if (reportsViewModel != null) {
-                                ReportsScreen(
-                                    viewModel = reportsViewModel,
-                                    authViewModel = authViewModel
-                                )
-                            }
-                        }
-                        AppDrawerItem.SECURITY -> {
-                            if (authViewModel != null) {
-                                var selectedSubTab by remember { mutableIntStateOf(0) }
-                                Column(modifier = Modifier.fillMaxSize()) {
-                                    SecondaryTabRow(selectedTabIndex = selectedSubTab) {
-                                        Tab(
-                                            selected = selectedSubTab == 0,
-                                            onClick = { selectedSubTab = 0 },
-                                            text = { Text("Security & PIN") }
-                                        )
-                                        Tab(
-                                            selected = selectedSubTab == 1,
-                                            onClick = { selectedSubTab = 1 },
-                                            text = { Text("App Permissions") }
-                                        )
-                                    }
-                                    if (selectedSubTab == 0) {
-                                        ImariAuthScreen(viewModel = authViewModel)
-                                    } else {
-                                        NotificationOnboardingScreen()
-                                    }
-                                }
-                            } else {
-                                NotificationOnboardingScreen()
-                            }
                         }
                     }
                 }
             }
+        }
+    }
 
-            // Display interactive reconciliation bottom sheet on live financial alert
-            liveAlertSms?.let { sms ->
-                if (reconciliationViewModel != null) {
-                    SmsReconciliationBottomSheet(
-                        financialSms = sms,
-                        viewModel = reconciliationViewModel,
-                        onDismiss = { liveAlertSms = null }
-                    )
+    // Quick Action Bottom Sheet
+    if (showQuickActionSheet) {
+        QuickActionBottomSheet(
+            onDismissRequest = { showQuickActionSheet = false },
+            onActionSelected = { actionType ->
+                showQuickActionSheet = false
+                when (actionType) {
+                    QuickActionType.INCOME, QuickActionType.EXPENSE, QuickActionType.SAVINGS_GOAL, QuickActionType.TRANSFER -> {
+                        quickActionDialogType = actionType
+                        quickActionAmountText = ""
+                        quickActionDescText = ""
+                    }
+                    QuickActionType.DEBT -> {
+                        drawerItemOverride = null
+                        selectedTab = IfarangaTab.BUSINESS
+                    }
+                    QuickActionType.POS_SALE -> {
+                        drawerItemOverride = null
+                        selectedTab = IfarangaTab.BUSINESS
+                    }
                 }
             }
-        }
+        )
+    }
+
+    // Quick Action Input Dialog
+    val currentDialogAction = quickActionDialogType
+    if (currentDialogAction != null) {
+        AlertDialog(
+            onDismissRequest = { quickActionDialogType = null },
+            title = {
+                Text(
+                    text = "${currentDialogAction.title} (${currentDialogAction.labelKinyarwanda})",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    OutlinedTextField(
+                        value = quickActionAmountText,
+                        onValueChange = { quickActionAmountText = it },
+                        label = { Text("Amount (RWF)") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    OutlinedTextField(
+                        value = quickActionDescText,
+                        onValueChange = { quickActionDescText = it },
+                        label = { Text("Description / Impamvu") },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        val amount = quickActionAmountText.toDoubleOrNull() ?: 0.0
+                        val desc = quickActionDescText.ifBlank { currentDialogAction.title }
+                        if (amount > 0) {
+                            when (currentDialogAction) {
+                                QuickActionType.INCOME -> {
+                                    moneyFlowViewModel.addTransaction(TransactionType.INCOME, amount, desc)
+                                    Toast.makeText(context, "＋ Income Recorded: $amount RWF", Toast.LENGTH_SHORT).show()
+                                }
+                                QuickActionType.EXPENSE -> {
+                                    moneyFlowViewModel.addTransaction(TransactionType.EXPENSE, amount, desc)
+                                    Toast.makeText(context, "− Expense Recorded: $amount RWF", Toast.LENGTH_SHORT).show()
+                                }
+                                QuickActionType.SAVINGS_GOAL -> {
+                                    moneyFlowViewModel.setSavings(amount)
+                                    Toast.makeText(context, "🎯 Savings Goal Updated: $amount RWF", Toast.LENGTH_SHORT).show()
+                                }
+                                QuickActionType.TRANSFER -> {
+                                    moneyFlowViewModel.addTransaction(TransactionType.TRANSFER, amount, desc)
+                                    Toast.makeText(context, "↔ Transfer Recorded: $amount RWF", Toast.LENGTH_SHORT).show()
+                                }
+                                else -> {}
+                            }
+                        }
+                        quickActionDialogType = null
+                    },
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Emeza (Save)")
+                }
+            },
+            dismissButton = {
+                OutlinedButton(
+                    onClick = { quickActionDialogType = null },
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("Biba (Cancel)")
+                }
+            }
+        )
     }
 }
 
 @Composable
 fun DrawerHeader(
-    shopName: String = "Imari Merchant",
-    currency: String = "RWF"
+    shopName: String,
+    currency: String,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        color = PrimaryEmeraldTealLight,
-        modifier = Modifier.fillMaxWidth()
+        color = MaterialTheme.colorScheme.primaryContainer,
+        modifier = modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 24.dp)
+        Row(
+            modifier = Modifier.padding(20.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            ImariLogo(
-                isHorizontal = true,
-                iconSize = 48.dp,
-                showTagline = true,
-                textColor = Color.White,
-                taglineColor = Color.White.copy(alpha = 0.85f)
+            IfarangaLogo(
+                modifier = Modifier.size(48.dp)
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            HorizontalDivider(color = Color.White.copy(alpha = 0.25f))
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = shopName,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Smart Financial Ledger",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White.copy(alpha = 0.75f)
-                    )
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = Color.White.copy(alpha = 0.15f),
-                    border = BorderStroke(1.dp, Color.White.copy(alpha = 0.35f))
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = "🇷🇼",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                        Text(
-                            text = currency,
-                            style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
-                        )
-                    }
-                }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = shopName,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                Text(
+                    text = "Currency: $currency (Rwanda)",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerFooter(
     currentLanguage: AppLanguage,
     onLanguageChange: (AppLanguage) -> Unit,
     isDarkMode: Boolean,
     onToggleDarkMode: (Boolean) -> Unit,
-    onLockApp: (() -> Unit)?
+    onLockApp: (() -> Unit)?,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        HorizontalDivider(modifier = Modifier.padding(bottom = 12.dp))
-
-        Text(
-            text = LocalStrings.get("language", currentLanguage),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 6.dp)
-        )
-
-        SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            SegmentedButton(
-                selected = currentLanguage == AppLanguage.ENGLISH,
-                onClick = { onLanguageChange(AppLanguage.ENGLISH) },
-                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
-            ) {
-                Text(
-                    text = "🇬🇧 English",
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
-                )
-            }
-            SegmentedButton(
-                selected = currentLanguage == AppLanguage.KINYARWANDA,
-                onClick = { onLanguageChange(AppLanguage.KINYARWANDA) },
-                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
-            ) {
-                Text(
-                    text = "🇷🇼 Kinyarwanda",
-                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .clickable { onToggleDarkMode(!isDarkMode) }
-                    .padding(horizontal = 8.dp, vertical = 6.dp)
-            ) {
-                Icon(
-                    imageVector = if (isDarkMode) Icons.Rounded.DarkMode else Icons.Rounded.LightMode,
-                    contentDescription = "Toggle Theme",
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(22.dp)
-                )
-                Text(
-                    text = if (isDarkMode) LocalStrings.get("dark", currentLanguage) else LocalStrings.get("light", currentLanguage),
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Switch(
-                    checked = isDarkMode,
-                    onCheckedChange = onToggleDarkMode,
-                    modifier = Modifier.scale(0.85f)
-                )
-            }
+            Text(
+                text = "Dark Mode",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+            Switch(
+                checked = isDarkMode,
+                onCheckedChange = onToggleDarkMode
+            )
+        }
 
-            if (onLockApp != null) {
-                OutlinedButton(
-                    onClick = onLockApp,
-                    shape = RoundedCornerShape(12.dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.LockReset,
-                        contentDescription = "Lock App",
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = LocalStrings.get("lock_app", currentLanguage),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
-                    )
-                }
+        if (onLockApp != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedButton(
+                onClick = onLockApp,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(imageVector = Icons.Rounded.Lock, contentDescription = "Lock App")
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Lock App")
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DrawerHeaderPreview() {
-    MyApplicationTheme {
-        DrawerHeader(
-            shopName = "Imari Merchant",
-            currency = "RWF"
-        )
     }
 }

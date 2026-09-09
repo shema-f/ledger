@@ -5,43 +5,39 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Growth Chart Trend Line & Grid -->
+    <!-- Geometric "I" Pillar (Emerald) -->
     <path
-        android:strokeColor="#33FFFFFF"
-        android:strokeWidth="2"
-        android:pathData="M24,74 L84,74" />
+        android:fillColor="#10B981"
+        android:pathData="M24,32 h8 c2.2,0 4,1.8 4,4 v36 c0,2.2 -1.8,4 -4,4 h-8 c-2.2,0 -4,-1.8 -4,-4 V36 c0,-2.2 1.8,-4 4,-4 Z" />
 
-    <!-- Growth Chart Bars -->
+    <!-- Geometric "M" Form with Growth Slope (Emerald) -->
     <path
-        android:fillColor="#80FFFFFF"
-        android:pathData="M28,60 h8 v14 h-8 z" />
+        android:fillColor="#10B981"
+        android:pathData="M42,42 h7 v34 h-7 z" />
     <path
-        android:fillColor="#B3FFFFFF"
-        android:pathData="M40,50 h8 v24 h-8 z" />
+        android:fillColor="#10B981"
+        android:pathData="M49,42 L62,60 L75,34 h7 L65,76 h-6 L49,42 Z" />
     <path
-        android:fillColor="#E6FFFFFF"
-        android:pathData="M52,40 h8 v34 h-8 z" />
+        android:fillColor="#10B981"
+        android:pathData="M75,34 h7 v42 h-7 z" />
 
-    <!-- Growth Trend Arrow Line (Gold) -->
+    <!-- Rising Growth Path & Trend Line (Warm Gold) -->
     <path
         android:strokeColor="#EAB308"
         android:strokeWidth="4"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
-        android:pathData="M26,62 L42,48 L56,52 L80,28" />
-    <path
-        android:fillColor="#EAB308"
-        android:pathData="M72,28 L82,26 L80,36 Z" />
+        android:pathData="M22,70 L40,54 L56,58 L82,28" />
 
-    <!-- Overlapping Coins Emblem -->
-    <path
-        android:fillColor="#FFFFFF"
-        android:strokeColor="#006A4E"
-        android:strokeWidth="1.5"
-        android:pathData="M66,66 C66,60.477 70.477,56 76,56 C81.523,56 86,60.477 86,66 C86,71.523 81.523,76 76,76 C70.477,76 66,71.523 66,66 Z" />
+    <!-- Rising Arrow Head (Warm Gold) -->
     <path
         android:fillColor="#EAB308"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2"
-        android:pathData="M54,72 C54,65.373 59.373,60 66,60 C72.627,60 78,65.373 78,72 C78,78.627 72.627,84 66,84 C59.373,84 54,78.627 54,72 Z" />
+        android:pathData="M72,28 L84,26 L81,38 Z" />
+
+    <!-- Golden Coin Accent Badge -->
+    <path
+        android:fillColor="#EAB308"
+        android:strokeColor="#0F172A"
+        android:strokeWidth="1.5"
+        android:pathData="M82,26 C82,21.582 85.582,18 90,18 C94.418,18 98,21.582 98,26 C98,30.418 94.418,34 90,34 C85.582,34 82,30.418 82,26 Z" />
 </vector>

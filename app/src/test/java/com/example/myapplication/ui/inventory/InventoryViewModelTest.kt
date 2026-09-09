@@ -214,4 +214,25 @@ class InventoryViewModelTest {
         val deleted = productRepository.getProductById(id)
         assertTrue(deleted == null)
     }
+
+    @Test
+    fun testFindProductByBarcode() = runTest {
+        backgroundScope.launch { viewModel.products.collect {} }
+
+        viewModel.addProduct(
+            name = "Inyange Mango Juice",
+            barcode = "888999",
+            buyingPrice = 300.0,
+            sellingPrice = 500.0,
+            currentStock = 12
+        )
+        advanceUntilIdle()
+
+        val found = viewModel.findProductByBarcode("888999")
+        assertNotNull(found)
+        assertEquals("Inyange Mango Juice", found?.name)
+
+        val notFound = viewModel.findProductByBarcode("000000")
+        assertTrue(notFound == null)
+    }
 }

@@ -35,6 +35,7 @@ import com.example.myapplication.ui.dashboard.DashboardViewModel
 import com.example.myapplication.ui.inventory.InventoryViewModel
 import com.example.myapplication.ui.loans.LoanDebtViewModel
 import com.example.myapplication.ui.momo.MoMoFeedViewModel
+import com.example.myapplication.ui.money.MoneyFlowViewModel
 import com.example.myapplication.ui.navigation.AppNavigation
 import com.example.myapplication.ui.reconciliation.SmsReconciliationViewModel
 import com.example.myapplication.ui.reports.ReportsViewModel
@@ -93,7 +94,12 @@ class MainActivity : FragmentActivity() {
                         )
                     } else {
                         val dashboardViewModel: DashboardViewModel = viewModel(
-                            factory = DashboardViewModel.Factory(ledgerRepository)
+                            factory = DashboardViewModel.Factory(
+                                ledgerRepository,
+                                transactionRepository,
+                                loanDebtRepository,
+                                accountRepository
+                            )
                         )
                         val customerViewModel: CustomerViewModel = viewModel(
                             factory = CustomerViewModel.Factory(ledgerRepository)
@@ -114,6 +120,12 @@ class MainActivity : FragmentActivity() {
                         )
                         val momoFeedViewModel: MoMoFeedViewModel = viewModel(
                             factory = MoMoFeedViewModel.Factory(moMoRepository, ledgerRepository)
+                        )
+                        val moneyFlowViewModel: MoneyFlowViewModel = viewModel(
+                            factory = MoneyFlowViewModel.Factory(
+                                transactionRepository,
+                                accountRepository
+                            )
                         )
                         val smsReconciliationViewModel: SmsReconciliationViewModel = viewModel(
                             factory = SmsReconciliationViewModel.Factory(
@@ -143,6 +155,7 @@ class MainActivity : FragmentActivity() {
                             inventoryViewModel = inventoryViewModel,
                             loanDebtViewModel = loanDebtViewModel,
                             momoFeedViewModel = momoFeedViewModel,
+                            moneyFlowViewModel = moneyFlowViewModel,
                             reconciliationViewModel = smsReconciliationViewModel,
                             reportsViewModel = reportsViewModel,
                             authViewModel = authViewModel,

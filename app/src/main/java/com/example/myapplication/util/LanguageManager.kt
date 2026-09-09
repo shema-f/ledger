@@ -8,11 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 
 enum class AppLanguage(val displayName: String, val code: String) {
     ENGLISH("English", "en"),
-    KINYARWANDA("Kinyarwanda", "rw")
+    KINYARWANDA("Kinyarwanda", "rw"),
+    FRENCH("Français", "fr")
 }
 
 object LanguageManager {
-    private const val PREFS_NAME = "imari_language_prefs"
+    private const val PREFS_NAME = "ifaranga_language_prefs"
     private const val KEY_LANGUAGE = "app_language"
 
     private var prefs: SharedPreferences? = null

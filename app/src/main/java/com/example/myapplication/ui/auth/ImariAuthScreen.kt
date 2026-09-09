@@ -53,12 +53,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.myapplication.util.LocalStrings
-import com.example.myapplication.util.localizedString
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
+import com.example.myapplication.ui.components.IfarangaLogo
 import com.example.myapplication.ui.components.ImariLogo
+import com.example.myapplication.util.AppLanguage
+import com.example.myapplication.util.LanguageManager
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
+import androidx.compose.material3.FilterChip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -120,6 +123,30 @@ fun ImariAuthScreen(
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                }
+
+                // Language Selector Chips in Profile Screen
+                val currentLanguage by LanguageManager.currentLanguage.collectAsStateWithLifecycle()
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    FilterChip(
+                        selected = currentLanguage == AppLanguage.ENGLISH,
+                        onClick = { LanguageManager.setLanguage(AppLanguage.ENGLISH) },
+                        label = { Text("🇬🇧 English", style = MaterialTheme.typography.labelSmall) }
+                    )
+                    FilterChip(
+                        selected = currentLanguage == AppLanguage.KINYARWANDA,
+                        onClick = { LanguageManager.setLanguage(AppLanguage.KINYARWANDA) },
+                        label = { Text("🇷🇼 Kinyarwanda", style = MaterialTheme.typography.labelSmall) }
+                    )
+                    FilterChip(
+                        selected = currentLanguage == AppLanguage.FRENCH,
+                        onClick = { LanguageManager.setLanguage(AppLanguage.FRENCH) },
+                        label = { Text("🇫🇷 Français", style = MaterialTheme.typography.labelSmall) }
+                    )
                 }
 
                 if (uiState.pinError != null) {
@@ -314,6 +341,34 @@ private fun MerchantOnboardingDialog(
                     singleLine = true,
                     readOnly = true
                 )
+
+                // Language Selector Chips in Onboarding Dialog
+                Text(
+                    text = localizedString("language"),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+                val currentDialogLang by LanguageManager.currentLanguage.collectAsStateWithLifecycle()
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    FilterChip(
+                        selected = currentDialogLang == AppLanguage.ENGLISH,
+                        onClick = { LanguageManager.setLanguage(AppLanguage.ENGLISH) },
+                        label = { Text("🇬🇧 English", style = MaterialTheme.typography.labelSmall) }
+                    )
+                    FilterChip(
+                        selected = currentDialogLang == AppLanguage.KINYARWANDA,
+                        onClick = { LanguageManager.setLanguage(AppLanguage.KINYARWANDA) },
+                        label = { Text("🇷🇼 Kinyarwanda", style = MaterialTheme.typography.labelSmall) }
+                    )
+                    FilterChip(
+                        selected = currentDialogLang == AppLanguage.FRENCH,
+                        onClick = { LanguageManager.setLanguage(AppLanguage.FRENCH) },
+                        label = { Text("🇫🇷 Français", style = MaterialTheme.typography.labelSmall) }
+                    )
+                }
             }
         },
         confirmButton = {
