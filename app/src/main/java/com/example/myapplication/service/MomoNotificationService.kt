@@ -3,7 +3,7 @@ package com.example.myapplication.service
 import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
-import com.example.myapplication.data.local.KayiDatabase
+import com.example.myapplication.data.local.ImariDatabase
 import com.example.myapplication.data.repository.LedgerRepositoryImpl
 import com.example.myapplication.data.repository.MoMoRepositoryImpl
 import com.example.myapplication.domain.model.MoMoLog
@@ -29,28 +29,31 @@ class MomoNotificationService : NotificationListenerService() {
         val fullContent = "$title $text $bigText".trim()
         if (fullContent.isBlank()) return
 
-        val parsed = MomoParser.parse(fullContent, sbn.postTime) ?: return
+        val parsedSms = RwandaFinancialParser.parse(title, fullContent, sbn.postTime) ?: return
 
         serviceScope.launch {
-            val db = KayiDatabase.getInstance(applicationContext)
+            val db = ImariDatabase.getInstance(applicationContext)
             val moMoRepo = MoMoRepositoryImpl(db.moMoLogDao())
             val ledgerRepo = LedgerRepositoryImpl(db.customerDao(), db.ledgerRecordDao())
 
-            if (moMoRepo.getMoMoLogByTxId(parsed.txId) != null) return@launch
+            if (moMoRepo.getMoMoLogByTxId(parsedSms.txReference) != null) return@launch
 
             val momoLog = MoMoLog(
-                senderName = parsed.senderName,
-                senderPhone = parsed.senderPhone,
-                amount = parsed.amount,
-                txId = parsed.txId,
-                balanceAfter = parsed.balanceAfter,
-                rawText = parsed.rawText,
-                timestamp = parsed.timestamp,
+                senderName = parsedSms.senderOrRecipient,
+                senderPhone = null,
+                amount = parsedSms.amount,
+                txId = parsedSms.txReference,
+                balanceAfter = parsedSms.balanceAfter,
+                rawText = fullContent,
+                timestamp = parsedSms.timestamp,
                 isReconciled = false
             )
 
             val logId = moMoRepo.addMoMoLog(momoLog)
             val savedLog = momoLog.copy(id = logId)
+
+            // Broadcast live alert state for interactive UI bottom sheet prompt
+            PaymentAlertManager.notifyAlert(parsedSms)
 
             val autoReconciliationEngine = AutoReconciliationEngine(
                 context = applicationContext,

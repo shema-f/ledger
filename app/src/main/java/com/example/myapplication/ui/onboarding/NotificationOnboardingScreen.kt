@@ -83,7 +83,7 @@ fun NotificationOnboardingScreen(
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "Kayi y'Ideni automatically matches incoming Mobile Money payments to your debtors without manual data entry.",
+            text = "Imari automatically matches incoming Mobile Money payments to your debtors without manual data entry.",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(horizontal = 12.dp)

@@ -306,11 +306,12 @@ class AutoReconciliationEngineTest {
 
         override suspend fun recalculateCustomerTotalDebt(customerId: Long) {
             val custRecords = fakeLedgerRecordDao.records.values.filter { it.customerId == customerId }
-            val calculatedDebt = custRecords.sumOf {
-                when (it.type) {
-                    TransactionType.CREDIT -> it.amount
-                    TransactionType.PAYMENT -> -it.amount
+            val calculatedDebt = custRecords.sumOf { record ->
+                when (record.type) {
+                    TransactionType.CREDIT -> record.amount
+                    TransactionType.PAYMENT -> -record.amount
                     TransactionType.CASH_SALE -> 0.0
+                    else -> 0.0
                 }
             }
             updateTotalDebt(customerId, calculatedDebt)

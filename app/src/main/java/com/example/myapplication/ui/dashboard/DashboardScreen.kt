@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.dashboard
 
+import com.example.myapplication.ui.components.ImariLogo
 import com.example.myapplication.ui.theme.*
 
 import androidx.compose.foundation.background
@@ -157,6 +158,13 @@ fun DashboardContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
+            Spacer(modifier = Modifier.height(12.dp))
+            ImariLogo(
+                iconSize = 40.dp,
+                showTagline = true,
+                isHorizontal = true,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
+            )
             Spacer(modifier = Modifier.height(8.dp))
             MerchantSummaryCard(summary = summary)
         }
@@ -265,7 +273,7 @@ fun MerchantSummaryCard(summary: DashboardSummary) {
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                     )
                     Text(
-                        text = "Kayi y'Ideni Ledger",
+                        text = "Imari Smart Ledger",
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -521,6 +529,11 @@ fun RecentActivityCard(
             MaterialTheme.colorScheme.onSecondaryContainer,
             "Icuruzwa (Cash)"
         )
+        else -> Triple(
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.onSurfaceVariant,
+            record.type.name
+        )
     }
 
     val formattedDate = remember(record.timestamp) {
@@ -556,6 +569,7 @@ fun RecentActivityCard(
                             TransactionType.CREDIT -> Icons.Rounded.ArrowUpward
                             TransactionType.PAYMENT -> Icons.Rounded.ArrowDownward
                             TransactionType.CASH_SALE -> Icons.Rounded.AttachMoney
+                            else -> Icons.Rounded.Receipt
                         }
                         Icon(
                             imageVector = icon,

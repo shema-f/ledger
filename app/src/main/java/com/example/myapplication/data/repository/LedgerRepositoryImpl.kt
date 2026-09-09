@@ -122,6 +122,7 @@ class LedgerRepositoryImpl(
                     TransactionType.CREDIT -> customer.totalDebt + record.amount
                     TransactionType.PAYMENT -> customer.totalDebt - record.amount
                     TransactionType.CASH_SALE -> customer.totalDebt
+                    else -> customer.totalDebt
                 }
                 customerDao.updateTotalDebt(record.customerId, updatedDebt)
             }
@@ -139,6 +140,7 @@ class LedgerRepositoryImpl(
                     TransactionType.CREDIT -> customer.totalDebt - record.amount
                     TransactionType.PAYMENT -> customer.totalDebt + record.amount
                     TransactionType.CASH_SALE -> customer.totalDebt
+                    else -> customer.totalDebt
                 }
                 customerDao.updateTotalDebt(record.customerId, updatedDebt)
             }

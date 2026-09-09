@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Circle Emblem Background in Deep Emerald Teal -->
+    <path
+        android:fillColor="#006A4E"
+        android:pathData="M54,4 C26.386,4 4,26.386 4,54 C4,81.614 26.386,104 54,104 C81.614,104 104,81.614 104,54 C104,26.386 81.614,4 54,4 Z" />
+
+    <!-- Growth Chart Trend Line & Grid -->
+    <path
+        android:strokeColor="#33FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M24,74 L84,74" />
+
+    <!-- Growth Chart Bars -->
+    <!-- Bar 1 -->
+    <path
+        android:fillColor="#80FFFFFF"
+        android:pathData="M28,60 h8 v14 h-8 z" />
+    <!-- Bar 2 -->
+    <path
+        android:fillColor="#B3FFFFFF"
+        android:pathData="M40,50 h8 v24 h-8 z" />
+    <!-- Bar 3 -->
+    <path
+        android:fillColor="#E6FFFFFF"
+        android:pathData="M52,40 h8 v34 h-8 z" />
+
+    <!-- Growth Trend Arrow Line (Gold) -->
+    <path
+        android:strokeColor="#EAB308"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M26,62 L42,48 L56,52 L80,28" />
+    <!-- Arrow Head -->
+    <path
+        android:fillColor="#EAB308"
+        android:pathData="M72,28 L82,26 L80,36 Z" />
+
+    <!-- Overlapping Coins Emblem -->
+    <!-- Coin 1 (Back/Right, White Fill with Teal Border) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#006A4E"
+        android:strokeWidth="1.5"
+        android:pathData="M66,66 C66,60.477 70.477,56 76,56 C81.523,56 86,60.477 86,66 C86,71.523 81.523,76 76,76 C70.477,76 66,71.523 66,66 Z" />
+    <path
+        android:fillColor="#006A4E"
+        android:pathData="M74,61 h4 v2 h-4 z M75,63 h2 v6 h-2 z M74,69 h4 v2 h-4 z" />
+
+    <!-- Coin 2 (Front/Left, Warm Gold) -->
+    <path
+        android:fillColor="#EAB308"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M54,72 C54,65.373 59.373,60 66,60 C72.627,60 78,65.373 78,72 C78,78.627 72.627,84 66,84 C59.373,84 54,78.627 54,72 Z" />
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M64,66 h4 v2 h-4 z M65,68 h2 v8 h-2 z M64,76 h4 v2 h-4 z" />
+</vector>

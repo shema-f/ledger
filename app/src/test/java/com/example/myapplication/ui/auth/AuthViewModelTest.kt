@@ -24,6 +24,8 @@ class AuthViewModelTest {
         assertFalse(state.isPinSet)
         assertTrue(state.isCreatingPin)
         assertEquals("Create Security PIN", state.authStatusMessage)
+        assertEquals("Smart Merchant", state.shopName)
+        assertEquals("Retail", state.businessSector)
     }
 
     @Test
@@ -96,11 +98,61 @@ class AuthViewModelTest {
         assertTrue(viewModel.uiState.value.isAuthenticated)
     }
 
+    @Test
+    fun `update merchant profile updates security manager and state`() {
+        val viewModel = AuthViewModel(fakeSecurityManager)
+
+        viewModel.updateMerchantProfile(
+            shopName = "Kigali General Store",
+            businessSector = "Hardware",
+            baseCurrency = "RWF"
+        )
+
+        val state = viewModel.uiState.value
+        assertEquals("Kigali General Store", state.shopName)
+        assertEquals("Hardware", state.businessSector)
+        assertEquals("Kigali General Store", fakeSecurityManager.shopName)
+        assertEquals("Hardware", fakeSecurityManager.businessSector)
+    }
+
+    @Test
+    fun `google one tap sign in updates authenticated state`() {
+        val viewModel = AuthViewModel(fakeSecurityManager)
+
+        viewModel.triggerGoogleOneTapSignIn()
+
+        val state = viewModel.uiState.value
+        assertTrue(state.isAuthenticated)
+        assertEquals("merchant@gmail.com", state.googleUserEmail)
+        assertEquals("Keza Smart Merchant", state.googleDisplayName)
+        assertEquals("merchant@gmail.com", fakeSecurityManager.googleUserEmail)
+    }
+
+    @Test
+    fun `offline pin unlock succeeds with valid pin`() {
+        fakeSecurityManager.setPin("1234")
+        val viewModel = AuthViewModel(fakeSecurityManager)
+
+        val success = viewModel.unlockWithOfflinePin("1234")
+
+        assertTrue(success)
+        val state = viewModel.uiState.value
+        assertTrue(state.isAuthenticated)
+        assertTrue(state.isOfflineMode)
+    }
+
     private class FakeSecurityManager : SecurityManager() {
         private var pinHash: String? = null
         override var isBiometricEnabled: Boolean = false
         override val isPinSet: Boolean
             get() = pinHash != null
+
+        override var shopName: String = "Smart Merchant"
+        override var businessSector: String = "Retail"
+        override var baseCurrency: String = "RWF"
+        override var googleUserEmail: String? = null
+        override var googleDisplayName: String? = null
+        override var isOfflineMode: Boolean = false
 
         override fun setPin(pin: String) {
             pinHash = pin

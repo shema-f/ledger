@@ -2,16 +2,16 @@ package com.example.myapplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Primary: Deep Vibrant Blue (#1E40AF / #2563EB)
-val PrimaryBlueLight = Color(0xFF1E40AF)
-val PrimaryBlueDark = Color(0xFF2563EB)
+// Primary: Deep Emerald Teal (#006A4E Light / #0F766E Dark)
+val PrimaryEmeraldTealLight = Color(0xFF006A4E)
+val PrimaryEmeraldTealDark = Color(0xFF0F766E)
 
-// Secondary: Dark Navy / Black (#0F172A / #1E293B)
-val SecondaryNavyLight = Color(0xFF0F172A)
-val SecondaryNavyDark = Color(0xFF1E293B)
+// Secondary: Dark Slate Navy (#0F172A Light / #1E293B Dark)
+val SecondarySlateNavyLight = Color(0xFF0F172A)
+val SecondarySlateNavyDark = Color(0xFF1E293B)
 
-// Background: Pristine Light White/Slate (#F8FAFC) / Dark (#090D16 / #0F172A)
-val BackgroundLight = Color(0xFFF8FAFC)
+// Background: Pristine Mint/Slate (#F0FDFA Light Theme, #090D16 Dark Theme)
+val BackgroundMintLight = Color(0xFFF0FDFA)
 val BackgroundDark = Color(0xFF090D16)
 
 // Surface: Pure White (#FFFFFF) / Slate Dark (#0F172A)
@@ -26,25 +26,38 @@ val OnSurfaceDark = Color(0xFFF8FAFC)
 val OnBackgroundLight = Color(0xFF020617)
 val OnBackgroundDark = Color(0xFFF8FAFC)
 
-// Accents
-val AccentElectricBlue = Color(0xFF3B82F6)
-val SuccessEmerald = Color(0xFF10B981)
-val SuccessEmeraldContainer = Color(0xFFD1FAE5)
-val OnSuccessEmeraldContainer = Color(0xFF065F46)
+// Accents: Warm Gold (#EAB308), Revenue Green (#10B981), Debt Red (#EF4444)
+val AccentWarmGold = Color(0xFFEAB308)
+val RevenueGreen = Color(0xFF10B981)
+val RevenueGreenContainer = Color(0xFFD1FAE5)
+val OnRevenueGreenContainer = Color(0xFF065F46)
 
-val WarningAmber = Color(0xFFF59E0B)
+val DebtRed = Color(0xFFEF4444)
+val DebtRedContainer = Color(0xFFFEE2E2)
+val OnDebtRedContainer = Color(0xFF991B1B)
+
+// Compatibility aliases for existing references
+val PrimaryBlueLight = PrimaryEmeraldTealLight
+val PrimaryBlueDark = PrimaryEmeraldTealDark
+val SecondaryNavyLight = SecondarySlateNavyLight
+val SecondaryNavyDark = SecondarySlateNavyDark
+val BackgroundLight = BackgroundMintLight
+val AccentElectricBlue = PrimaryEmeraldTealLight
+val SuccessEmerald = RevenueGreen
+val SuccessEmeraldContainer = RevenueGreenContainer
+val OnSuccessEmeraldContainer = OnRevenueGreenContainer
+val WarningAmber = AccentWarmGold
 val WarningAmberContainer = Color(0xFFFEF3C7)
 val OnWarningAmberContainer = Color(0xFF92400E)
-
-val ErrorRed = Color(0xFFEF4444)
-val ErrorRedContainer = Color(0xFFFEE2E2)
-val OnErrorRedContainer = Color(0xFF991B1B)
+val ErrorRed = DebtRed
+val ErrorRedContainer = DebtRedContainer
+val OnErrorRedContainer = OnDebtRedContainer
 
 // Surface Variant & Borders
-val SurfaceVariantLight = Color(0xFFF1F5F9)
+val SurfaceVariantLight = Color(0xFFCCFBF1)
 val SurfaceVariantDark = Color(0xFF1E293B)
-val OnSurfaceVariantLight = Color(0xFF475569)
+val OnSurfaceVariantLight = Color(0xFF334155)
 val OnSurfaceVariantDark = Color(0xFF94A3B8)
 
-val OutlineLight = Color(0xFFE2E8F0)
+val OutlineLight = Color(0xFFCBD5E1)
 val OutlineDark = Color(0xFF334155)

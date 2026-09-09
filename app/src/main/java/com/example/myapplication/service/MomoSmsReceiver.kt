@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.provider.Telephony
-import com.example.myapplication.data.local.KayiDatabase
+import com.example.myapplication.data.local.ImariDatabase
 import com.example.myapplication.data.repository.LedgerRepositoryImpl
 import com.example.myapplication.data.repository.MoMoRepositoryImpl
 import com.example.myapplication.domain.model.MoMoLog
@@ -27,7 +27,7 @@ class MomoSmsReceiver : BroadcastReceiver() {
 
         scope.launch {
             try {
-                val db = KayiDatabase.getInstance(context.applicationContext)
+                val db = ImariDatabase.getInstance(context.applicationContext)
                 val moMoRepo = MoMoRepositoryImpl(db.moMoLogDao())
                 val ledgerRepo = LedgerRepositoryImpl(db.customerDao(), db.ledgerRecordDao())
                 val autoReconciliationEngine = AutoReconciliationEngine(
@@ -38,25 +38,29 @@ class MomoSmsReceiver : BroadcastReceiver() {
 
                 for (sms in messages) {
                     val body = sms.messageBody ?: continue
+                    val sender = sms.displayOriginatingAddress ?: sms.originatingAddress
                     val timestamp = sms.timestampMillis
 
-                    val parsed = MomoParser.parse(body, timestamp) ?: continue
+                    val parsedSms = RwandaFinancialParser.parse(sender, body, timestamp) ?: continue
 
-                    if (moMoRepo.getMoMoLogByTxId(parsed.txId) != null) continue
+                    if (moMoRepo.getMoMoLogByTxId(parsedSms.txReference) != null) continue
 
                     val momoLog = MoMoLog(
-                        senderName = parsed.senderName,
-                        senderPhone = parsed.senderPhone,
-                        amount = parsed.amount,
-                        txId = parsed.txId,
-                        balanceAfter = parsed.balanceAfter,
-                        rawText = parsed.rawText,
-                        timestamp = parsed.timestamp,
+                        senderName = parsedSms.senderOrRecipient,
+                        senderPhone = null,
+                        amount = parsedSms.amount,
+                        txId = parsedSms.txReference,
+                        balanceAfter = parsedSms.balanceAfter,
+                        rawText = body,
+                        timestamp = parsedSms.timestamp,
                         isReconciled = false
                     )
 
                     val logId = moMoRepo.addMoMoLog(momoLog)
                     val savedLog = momoLog.copy(id = logId)
+
+                    // Broadcast live alert state for interactive UI bottom sheet prompt
+                    PaymentAlertManager.notifyAlert(parsedSms)
 
                     autoReconciliationEngine.reconcile(savedLog)
                 }

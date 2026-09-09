@@ -107,7 +107,7 @@ class CustomerViewModelTest {
         val kiny = viewModel.generateDebtReminder(customer, ReminderLanguage.KINYARWANDA)
         assertTrue(kiny.contains("Claude Mugisha"))
         assertTrue(kiny.contains("12,500"))
-        assertTrue(kiny.contains("kuri Kayi y'Ideni"))
+        assertTrue(kiny.contains("kuri Imari"))
 
         val eng = viewModel.generateDebtReminder(customer, ReminderLanguage.ENGLISH)
         assertTrue(eng.contains("Claude Mugisha"))

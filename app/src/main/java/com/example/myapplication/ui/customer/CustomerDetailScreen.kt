@@ -393,6 +393,11 @@ fun LedgerTimelineItem(record: LedgerRecord) {
             MaterialTheme.colorScheme.onSecondaryContainer,
             "Cash Sale"
         )
+        else -> Triple(
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.onSurfaceVariant,
+            record.type.name
+        )
     }
 
     val formattedDate = remember(record.timestamp) {

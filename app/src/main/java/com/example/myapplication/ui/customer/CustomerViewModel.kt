@@ -153,11 +153,11 @@ class CustomerViewModel(
         val amountFormatted = String.format(Locale.US, "%,.0f", customer.totalDebt)
         return when (language) {
             ReminderLanguage.KINYARWANDA ->
-                "Mwaramutse ${customer.fullName}, mufe $amountFormatted RWF kuri Kayi y'Ideni. Murakoze!"
+                "Mwaramutse ${customer.fullName}, mufe $amountFormatted RWF kuri Imari. Murakoze!"
             ReminderLanguage.ENGLISH ->
-                "Hello ${customer.fullName}, this is a reminder regarding your outstanding debt of $amountFormatted RWF on Kayi y'Ideni. Thank you!"
+                "Hello ${customer.fullName}, this is a reminder regarding your outstanding debt of $amountFormatted RWF on Imari. Thank you!"
             ReminderLanguage.FRENCH ->
-                "Bonjour ${customer.fullName}, ceci est un rappel concernant votre dette de $amountFormatted RWF sur Kayi y'Ideni. Merci!"
+                "Bonjour ${customer.fullName}, ceci est un rappel concernant votre dette de $amountFormatted RWF sur Imari. Merci!"
         }
     }
 

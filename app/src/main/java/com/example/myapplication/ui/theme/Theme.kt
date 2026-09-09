@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -13,51 +12,51 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = PrimaryBlueDark,
+    primary = PrimaryEmeraldTealDark,
     onPrimary = Color.White,
-    primaryContainer = SecondaryNavyDark,
+    primaryContainer = SecondarySlateNavyDark,
     onPrimaryContainer = Color.White,
-    secondary = SecondaryNavyDark,
+    secondary = SecondarySlateNavyDark,
     onSecondary = Color.White,
     secondaryContainer = Color(0xFF1E293B),
     onSecondaryContainer = Color.White,
-    tertiary = AccentElectricBlue,
-    onTertiary = Color.White,
+    tertiary = AccentWarmGold,
+    onTertiary = Color.Black,
     background = BackgroundDark,
     onBackground = OnBackgroundDark,
     surface = SurfaceDark,
     onSurface = OnSurfaceDark,
     surfaceVariant = SurfaceVariantDark,
     onSurfaceVariant = OnSurfaceVariantDark,
-    error = ErrorRed,
+    error = DebtRed,
     onError = Color.White,
-    errorContainer = ErrorRedContainer,
-    onErrorContainer = OnErrorRedContainer,
+    errorContainer = DebtRedContainer,
+    onErrorContainer = OnDebtRedContainer,
     outline = OutlineDark,
     outlineVariant = Color(0xFF1E293B)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = PrimaryBlueLight,
+    primary = PrimaryEmeraldTealLight,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFDBEAFE),
-    onPrimaryContainer = Color(0xFF1E3A8A),
-    secondary = SecondaryNavyLight,
+    primaryContainer = Color(0xFFCCFBF1),
+    onPrimaryContainer = Color(0xFF064E3B),
+    secondary = SecondarySlateNavyLight,
     onSecondary = Color.White,
     secondaryContainer = Color(0xFFE2E8F0),
     onSecondaryContainer = Color(0xFF0F172A),
-    tertiary = AccentElectricBlue,
-    onTertiary = Color.White,
-    background = BackgroundLight,
+    tertiary = AccentWarmGold,
+    onTertiary = Color.Black,
+    background = BackgroundMintLight,
     onBackground = OnBackgroundLight,
     surface = SurfaceLight,
     onSurface = OnSurfaceLight,
     surfaceVariant = SurfaceVariantLight,
     onSurfaceVariant = OnSurfaceVariantLight,
-    error = ErrorRed,
+    error = DebtRed,
     onError = Color.White,
-    errorContainer = ErrorRedContainer,
-    onErrorContainer = OnErrorRedContainer,
+    errorContainer = DebtRedContainer,
+    onErrorContainer = OnDebtRedContainer,
     outline = OutlineLight,
     outlineVariant = Color(0xFFCBD5E1)
 )
