@@ -68,7 +68,9 @@ class MainActivity : FragmentActivity() {
         val isLockedInitial = securityManager.shouldLockApp()
 
         setContent {
-            MyApplicationTheme {
+            var isDarkMode by remember { mutableStateOf(false) }
+
+            MyApplicationTheme(darkTheme = isDarkMode) {
                 var isLocked by remember { mutableStateOf(isLockedInitial) }
 
                 Surface(
@@ -140,7 +142,10 @@ class MainActivity : FragmentActivity() {
                             momoFeedViewModel = momoFeedViewModel,
                             reconciliationViewModel = smsReconciliationViewModel,
                             reportsViewModel = reportsViewModel,
-                            authViewModel = authViewModel
+                            authViewModel = authViewModel,
+                            onLockApp = { isLocked = true },
+                            isDarkMode = isDarkMode,
+                            onToggleDarkMode = { isDarkMode = it }
                         )
                     }
                 }
