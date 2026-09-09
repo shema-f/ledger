@@ -66,6 +66,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.domain.model.Account
 import com.example.myapplication.domain.model.Product
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -119,12 +121,12 @@ fun InventoryScreen(
             ) {
                 Column {
                     Text(
-                        text = "Inventory & POS",
+                        text = localizedString("Inventory & POS"),
                         style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = "Manage products & conduct quick sales",
+                        text = localizedString("Product Catalog"),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -138,7 +140,7 @@ fun InventoryScreen(
                 value = searchQuery,
                 onValueChange = { viewModel.setSearchQuery(it) },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search products by name or barcode...") },
+                placeholder = { Text(localizedString("search_products")) },
                 leadingIcon = {
                     Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search")
                 },
@@ -163,7 +165,7 @@ fun InventoryScreen(
                 FilterChip(
                     selected = showLowStockOnly,
                     onClick = { viewModel.toggleLowStockFilter(!showLowStockOnly) },
-                    label = { Text("Low Stock Alerts") },
+                    label = { Text(localizedString("Low Stock Alert")) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Warning,
@@ -185,7 +187,7 @@ fun InventoryScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = if (showLowStockOnly) "No low stock alerts!" else "No products found.",
+                        text = if (showLowStockOnly) localizedString("Low Stock Alert") else localizedString("No products found."),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -342,24 +344,24 @@ fun ProductCard(
             ) {
                 Column {
                     Text(
-                        text = "Buy Price",
+                        text = localizedString("Buying Price"),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "${currencyFormat.format(product.buyingPrice)} RWF",
+                        text = "${currencyFormat.format(product.buyingPrice)} ${localizedString("RWF")}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                 }
 
                 Column {
                     Text(
-                        text = "Sell Price",
+                        text = localizedString("Selling Price"),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "${currencyFormat.format(product.sellingPrice)} RWF",
+                        text = "${currencyFormat.format(product.sellingPrice)} ${localizedString("RWF")}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -367,12 +369,12 @@ fun ProductCard(
 
                 Column {
                     Text(
-                        text = "Margin/Unit",
+                        text = localizedString("Profit Margin"),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "+${currencyFormat.format(margin)} RWF",
+                        text = "+${currencyFormat.format(margin)} ${localizedString("RWF")}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                         color = Color(0xFF2E7D32)
                     )
@@ -414,7 +416,7 @@ fun ProductCard(
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("POS Sale")
+                    Text(localizedString("POS Checkout"))
                 }
             }
         }
@@ -545,12 +547,12 @@ fun AddEditProductDialog(
                     onSave(updatedProduct)
                 }
             ) {
-                Text("Save")
+                Text(localizedString("Save"))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(localizedString("Cancel"))
             }
         }
     )
@@ -583,7 +585,7 @@ fun PosCheckoutDialog(
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Quick POS Checkout")
+                Text(localizedString("POS Checkout"))
             }
         },
         text = {
@@ -596,7 +598,7 @@ fun PosCheckoutDialog(
                 )
 
                 Text(
-                    text = "Stock Available: ${product.currentStock} units",
+                    text = "${localizedString("Stock Quantity")}: ${product.currentStock}",
                     style = MaterialTheme.typography.bodySmall,
                     color = if (product.currentStock <= product.minAlertStock) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -643,10 +645,10 @@ fun PosCheckoutDialog(
                 ) {
                     val selectedAccount = accounts.find { it.id == selectedAccountId }
                     OutlinedTextField(
-                        value = selectedAccount?.name ?: "Select Target Account",
+                        value = selectedAccount?.name ?: localizedString("Select Account"),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Target Account") },
+                        label = { Text(localizedString("Select Account")) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedAccountDropdown) },
                         modifier = Modifier
                             .menuAnchor()
@@ -681,7 +683,7 @@ fun PosCheckoutDialog(
                         ) {
                             Text(text = "Total Sale:", style = MaterialTheme.typography.bodyMedium)
                             Text(
-                                text = "${currencyFormat.format(totalAmount)} RWF",
+                                text = "${currencyFormat.format(totalAmount)} ${localizedString("RWF")}",
                                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -691,9 +693,9 @@ fun PosCheckoutDialog(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(text = "Profit Margin:", style = MaterialTheme.typography.bodyMedium)
+                            Text(text = "${localizedString("Profit Margin")}:", style = MaterialTheme.typography.bodyMedium)
                             Text(
-                                text = "+${currencyFormat.format(totalProfit)} RWF",
+                                text = "+${currencyFormat.format(totalProfit)} ${localizedString("RWF")}",
                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                 color = Color(0xFF2E7D32)
                             )
@@ -712,12 +714,12 @@ fun PosCheckoutDialog(
                 },
                 enabled = product.currentStock >= quantity && selectedAccountId != 0L
             ) {
-                Text("Confirm Checkout")
+                Text(localizedString("POS Checkout"))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(localizedString("Cancel"))
             }
         }
     )

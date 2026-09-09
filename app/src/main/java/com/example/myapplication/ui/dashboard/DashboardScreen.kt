@@ -2,6 +2,8 @@ package com.example.myapplication.ui.dashboard
 
 import com.example.myapplication.ui.components.ImariLogo
 import com.example.myapplication.ui.theme.*
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -171,7 +173,7 @@ fun DashboardContent(
 
         item {
             Text(
-                text = "Quick Actions",
+                text = localizedString("Quick Actions"),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -191,7 +193,7 @@ fun DashboardContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Recent Activity",
+                    text = localizedString("Recent Activity"),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -219,7 +221,7 @@ fun DashboardContent(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "No recent activity recorded",
+                            text = localizedString("No recent activity recorded"),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.outline
                         )
@@ -268,7 +270,7 @@ fun MerchantSummaryCard(summary: DashboardSummary) {
             ) {
                 Column {
                     Text(
-                        text = "Merchant Overview",
+                        text = localizedString("Merchant Overview"),
                         style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                     )
@@ -310,12 +312,12 @@ fun MerchantSummaryCard(summary: DashboardSummary) {
                 ) {
                     Column {
                         Text(
-                            text = "Total Outstanding Debt",
+                            text = localizedString("Total Outstanding Debts"),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = "${formatCurrency(summary.totalOutstandingDebt)} RWF",
+                            text = "${formatCurrency(summary.totalOutstandingDebt)} ${localizedString("RWF")}",
                             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
                             color = MaterialTheme.colorScheme.error
                         )
@@ -350,14 +352,14 @@ fun MerchantSummaryCard(summary: DashboardSummary) {
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Today's Sales",
+                                text = localizedString("Today's Sales"),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "${formatCurrency(summary.todaySales)} RWF",
+                            text = "${formatCurrency(summary.todaySales)} ${localizedString("RWF")}",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -380,7 +382,7 @@ fun MerchantSummaryCard(summary: DashboardSummary) {
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Active Debtors",
+                                text = localizedString("Active Debtors"),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -411,8 +413,8 @@ fun ActionGrid(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ActionTile(
-                title = "+ Ideni",
-                subtitle = "Add Debt",
+                title = localizedString("+ Ideni Shya"),
+                subtitle = localizedString("Add Debt"),
                 icon = Icons.Rounded.Add,
                 backgroundColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
@@ -420,8 +422,8 @@ fun ActionGrid(
                 modifier = Modifier.weight(1f)
             )
             ActionTile(
-                title = "Kwishyura",
-                subtitle = "Record Payment",
+                title = localizedString("Kwishyura Ideni"),
+                subtitle = localizedString("Record Payment"),
                 icon = Icons.Rounded.Payments,
                 backgroundColor = SuccessEmeraldContainer,
                 contentColor = OnSuccessEmeraldContainer,
@@ -434,8 +436,8 @@ fun ActionGrid(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ActionTile(
-                title = "Icuruzwa",
-                subtitle = "Cash Sale",
+                title = localizedString("Icuruzwa rya cash"),
+                subtitle = localizedString("New Cash Sale"),
                 icon = Icons.Rounded.PointOfSale,
                 backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -443,8 +445,8 @@ fun ActionGrid(
                 modifier = Modifier.weight(1f)
             )
             ActionTile(
-                title = "MoMo Feed",
-                subtitle = "Live Receipts",
+                title = localizedString("MoMo Live Feed"),
+                subtitle = localizedString("Incoming Payment Alerts"),
                 icon = Icons.Rounded.Receipt,
                 backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -633,7 +635,7 @@ fun QuickDebtDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("+ Ideni (Add Debt)") },
+        title = { Text(localizedString("Add Debt")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ExposedDropdownMenuBox(
@@ -641,10 +643,10 @@ fun QuickDebtDialog(
                     onExpandedChange = { expanded = !expanded }
                 ) {
                     OutlinedTextField(
-                        value = selectedCustomer?.fullName ?: "Select Customer",
+                        value = selectedCustomer?.fullName ?: localizedString("Select Account"),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Customer") },
+                        label = { Text(localizedString("Customer Name")) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -669,7 +671,7 @@ fun QuickDebtDialog(
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it.filter { char -> char.isDigit() || char == '.' } },
-                    label = { Text("Amount (RWF)") },
+                    label = { Text("${localizedString("Amount")} (RWF)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -677,7 +679,7 @@ fun QuickDebtDialog(
                 OutlinedTextField(
                     value = descriptionText,
                     onValueChange = { descriptionText = it },
-                    label = { Text("Description (e.g. Sugar, Milk)") },
+                    label = { Text("Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -700,12 +702,12 @@ fun QuickDebtDialog(
                     }
                 }
             ) {
-                Text("Add Debt")
+                Text(localizedString("Add Debt"))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(localizedString("Cancel"))
             }
         }
     )
@@ -726,7 +728,7 @@ fun QuickPaymentDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Kwishyura (Record Payment)") },
+        title = { Text(localizedString("Record Payment")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 ExposedDropdownMenuBox(
@@ -734,10 +736,10 @@ fun QuickPaymentDialog(
                     onExpandedChange = { expanded = !expanded }
                 ) {
                     OutlinedTextField(
-                        value = selectedCustomer?.fullName ?: "Select Customer",
+                        value = selectedCustomer?.fullName ?: localizedString("Select Account"),
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Customer") },
+                        label = { Text(localizedString("Customer Name")) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -793,12 +795,12 @@ fun QuickPaymentDialog(
                     }
                 }
             ) {
-                Text("Record Payment")
+                Text(localizedString("Record Payment"))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(localizedString("Cancel"))
             }
         }
     )
@@ -815,13 +817,13 @@ fun QuickCashSaleDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Icuruzwa (Cash Sale)") },
+        title = { Text(localizedString("New Cash Sale")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it.filter { char -> char.isDigit() || char == '.' } },
-                    label = { Text("Sale Amount (RWF)") },
+                    label = { Text("${localizedString("Amount")} (RWF)") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -829,7 +831,7 @@ fun QuickCashSaleDialog(
                 OutlinedTextField(
                     value = descriptionText,
                     onValueChange = { descriptionText = it },
-                    label = { Text("Item Description") },
+                    label = { Text("Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -849,12 +851,12 @@ fun QuickCashSaleDialog(
                     }
                 }
             ) {
-                Text("Record Sale")
+                Text(localizedString("New Cash Sale"))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(localizedString("Cancel"))
             }
         }
     )

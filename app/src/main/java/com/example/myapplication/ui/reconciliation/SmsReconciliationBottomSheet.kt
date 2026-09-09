@@ -58,6 +58,8 @@ import com.example.myapplication.domain.model.Customer
 import com.example.myapplication.domain.model.LoanDebt
 import com.example.myapplication.domain.model.Product
 import com.example.myapplication.service.FinancialSms
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -117,7 +119,7 @@ fun SmsReconciliationBottomSheet(
         ) {
             // Header: Title
             Text(
-                text = "New Payment Alert Detected",
+                text = localizedString("Incoming Payment Alerts"),
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface
             )

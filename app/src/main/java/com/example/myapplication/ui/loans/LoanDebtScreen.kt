@@ -58,6 +58,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -148,14 +150,14 @@ fun LoanDebtScreen(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "Owed to You",
+                                text = localizedString("Debts Owed to You"),
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                                 color = Color(0xFFE65100)
                             )
                         }
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "${currencyFormat.format(totalReceivables)} RWF",
+                            text = "${currencyFormat.format(totalReceivables)} ${localizedString("RWF")}",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = Color(0xFFB71C1C)
                         )
@@ -180,14 +182,14 @@ fun LoanDebtScreen(
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Text(
-                                text = "You Owe",
+                                text = localizedString("Business Loans You Owe"),
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                                 color = Color(0xFF1A237E)
                             )
                         }
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "${currencyFormat.format(totalPayables)} RWF",
+                            text = "${currencyFormat.format(totalPayables)} ${localizedString("RWF")}",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = Color(0xFF0D47A1)
                         )
@@ -205,12 +207,12 @@ fun LoanDebtScreen(
                 Tab(
                     selected = selectedTabIndex == 0,
                     onClick = { selectedTabIndex = 0 },
-                    text = { Text("Customer Debts (Amadeni)", fontWeight = FontWeight.SemiBold) }
+                    text = { Text(localizedString("Customer Debts (Amadeni)"), fontWeight = FontWeight.SemiBold) }
                 )
                 Tab(
                     selected = selectedTabIndex == 1,
                     onClick = { selectedTabIndex = 1 },
-                    text = { Text("Business Loans (Inguzanyo)", fontWeight = FontWeight.SemiBold) }
+                    text = { Text(localizedString("Business Loans (Inguzanyo)"), fontWeight = FontWeight.SemiBold) }
                 )
             }
 

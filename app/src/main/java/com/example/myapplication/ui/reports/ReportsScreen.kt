@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.myapplication.domain.model.Account
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 import com.example.myapplication.ui.auth.AuthViewModel
 import com.example.myapplication.util.PdfReportGenerator
 import java.text.NumberFormat
@@ -88,7 +90,7 @@ fun ReportsScreen(
                 title = {
                     Column {
                         Text(
-                            text = "Business Reports & P&L",
+                            text = localizedString("Financial Reports"),
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
@@ -116,7 +118,7 @@ fun ReportsScreen(
             // Date Range Filter Chip Row
             item {
                 Text(
-                    text = "Select Statement Period",
+                    text = localizedString("Select Date Range"),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -140,7 +142,7 @@ fun ReportsScreen(
             // Financial P&L Cards
             item {
                 Text(
-                    text = "Profit & Loss Summary",
+                    text = localizedString("Financial Reports"),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -151,8 +153,8 @@ fun ReportsScreen(
                 ) {
                     // Gross Revenue Card (Emerald Green)
                     PlSummaryCard(
-                        title = "Gross Revenue",
-                        amountText = "${numberFormat.format(uiState.grossRevenue)} RWF",
+                        title = localizedString("Gross Revenue"),
+                        amountText = "${numberFormat.format(uiState.grossRevenue)} ${localizedString("RWF")}",
                         icon = Icons.AutoMirrored.Rounded.TrendingUp,
                         backgroundColor = Color(0xFF059669), // Emerald Green
                         contentColor = Color.White
@@ -160,8 +162,8 @@ fun ReportsScreen(
 
                     // Cost of Goods Sold (Slate Blue)
                     PlSummaryCard(
-                        title = "Cost of Goods Sold (COGS)",
-                        amountText = "${numberFormat.format(uiState.cogs)} RWF",
+                        title = localizedString("Cost of Goods Sold"),
+                        amountText = "${numberFormat.format(uiState.cogs)} ${localizedString("RWF")}",
                         icon = Icons.Rounded.ArrowDownward,
                         backgroundColor = Color(0xFF475569), // Slate Blue
                         contentColor = Color.White
@@ -169,8 +171,8 @@ fun ReportsScreen(
 
                     // Gross Operating Profit (Bright Teal)
                     PlSummaryCard(
-                        title = "Gross Operating Profit",
-                        amountText = "${numberFormat.format(uiState.grossProfit)} RWF",
+                        title = localizedString("Gross Operating Profit"),
+                        amountText = "${numberFormat.format(uiState.grossProfit)} ${localizedString("RWF")}",
                         icon = Icons.Rounded.MonetizationOn,
                         backgroundColor = Color(0xFF0D9488), // Bright Teal
                         contentColor = Color.White
@@ -265,7 +267,7 @@ fun ReportsScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Generating Audit PDF...",
+                            text = localizedString("Generating PDF..."),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -277,7 +279,7 @@ fun ReportsScreen(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Export Bank Audit PDF Statement",
+                            text = localizedString("Export PDF Statement"),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold
                         )

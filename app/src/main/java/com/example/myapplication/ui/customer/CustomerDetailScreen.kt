@@ -61,6 +61,8 @@ import com.example.myapplication.domain.model.Customer
 import com.example.myapplication.domain.model.LedgerRecord
 import com.example.myapplication.domain.model.TransactionType
 import com.example.myapplication.ui.dashboard.formatCurrency
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -339,7 +341,7 @@ fun CustomerActionRow(
             ) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("+ Ideni")
+                Text(localizedString("Add Debt"))
             }
 
             Button(
@@ -353,7 +355,7 @@ fun CustomerActionRow(
             ) {
                 Icon(imageVector = Icons.Rounded.Payments, contentDescription = null, modifier = Modifier.size(18.dp))
                 Spacer(modifier = Modifier.width(6.dp))
-                Text("Kwishyura")
+                Text(localizedString("Record Payment"))
             }
         }
 
@@ -369,7 +371,7 @@ fun CustomerActionRow(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Send Debt Reminder (Kinyarwanda / English / French)")
+                Text(localizedString("Send Reminder"))
             }
         }
     }

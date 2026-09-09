@@ -45,6 +45,9 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
@@ -54,6 +57,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -92,6 +96,9 @@ import com.example.myapplication.ui.reports.ReportsScreen
 import com.example.myapplication.ui.reports.ReportsViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.ui.theme.PrimaryEmeraldTealLight
+import com.example.myapplication.util.AppLanguage
+import com.example.myapplication.util.LanguageManager
+import com.example.myapplication.util.LocalStrings
 import kotlinx.coroutines.launch
 
 enum class AppDrawerItem(
@@ -127,6 +134,8 @@ fun AppNavigation(
     var selectedCustomerId by remember { mutableStateOf<Long?>(null) }
     var liveAlertSms by remember { mutableStateOf<FinancialSms?>(null) }
     var isDarkTheme by remember { mutableStateOf(isDarkMode) }
+
+    val currentLanguage by LanguageManager.currentLanguage.collectAsState()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -166,7 +175,7 @@ fun AppNavigation(
                             NavigationDrawerItem(
                                 label = {
                                     Text(
-                                        text = item.title,
+                                        text = LocalStrings.get(item.title, currentLanguage),
                                         fontWeight = if (currentTab == item) FontWeight.Bold else FontWeight.Medium
                                     )
                                 },
@@ -191,6 +200,10 @@ fun AppNavigation(
 
                     // Drawer Footer
                     DrawerFooter(
+                        currentLanguage = currentLanguage,
+                        onLanguageChange = { newLanguage ->
+                            LanguageManager.setLanguage(newLanguage)
+                        },
                         isDarkMode = isDarkTheme,
                         onToggleDarkMode = { newDark ->
                             isDarkTheme = newDark
@@ -208,7 +221,7 @@ fun AppNavigation(
                 TopAppBar(
                     title = {
                         Text(
-                            text = if (selectedCustomerId != null) "Customer Detail" else currentTab.title,
+                            text = if (selectedCustomerId != null) LocalStrings.get("Customer Detail", currentLanguage) else LocalStrings.get(currentTab.title, currentLanguage),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -418,8 +431,11 @@ fun DrawerHeader(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrawerFooter(
+    currentLanguage: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
     isDarkMode: Boolean,
     onToggleDarkMode: (Boolean) -> Unit,
     onLockApp: (() -> Unit)?
@@ -430,6 +446,40 @@ fun DrawerFooter(
             .padding(16.dp)
     ) {
         HorizontalDivider(modifier = Modifier.padding(bottom = 12.dp))
+
+        Text(
+            text = LocalStrings.get("language", currentLanguage),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 6.dp)
+        )
+
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            SegmentedButton(
+                selected = currentLanguage == AppLanguage.ENGLISH,
+                onClick = { onLanguageChange(AppLanguage.ENGLISH) },
+                shape = SegmentedButtonDefaults.itemShape(index = 0, count = 2)
+            ) {
+                Text(
+                    text = "🇬🇧 English",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+                )
+            }
+            SegmentedButton(
+                selected = currentLanguage == AppLanguage.KINYARWANDA,
+                onClick = { onLanguageChange(AppLanguage.KINYARWANDA) },
+                shape = SegmentedButtonDefaults.itemShape(index = 1, count = 2)
+            ) {
+                Text(
+                    text = "🇷🇼 Kinyarwanda",
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -451,7 +501,7 @@ fun DrawerFooter(
                     modifier = Modifier.size(22.dp)
                 )
                 Text(
-                    text = if (isDarkMode) "Dark" else "Light",
+                    text = if (isDarkMode) LocalStrings.get("dark", currentLanguage) else LocalStrings.get("light", currentLanguage),
                     style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.SemiBold),
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -475,7 +525,7 @@ fun DrawerFooter(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Lock App",
+                        text = LocalStrings.get("lock_app", currentLanguage),
                         style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                 }

@@ -59,6 +59,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapplication.domain.model.Customer
 import com.example.myapplication.ui.dashboard.formatCurrency
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 
 @Composable
 fun CustomerListScreen(
@@ -339,13 +341,13 @@ fun AddCustomerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Add Customer") },
+        title = { Text(localizedString("Add Customer")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = fullName,
                     onValueChange = { fullName = it },
-                    label = { Text("Full Name *") },
+                    label = { Text(localizedString("Customer Name")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -353,7 +355,7 @@ fun AddCustomerDialog(
                 OutlinedTextField(
                     value = phoneNumber,
                     onValueChange = { phoneNumber = it },
-                    label = { Text("Phone Number * (e.g. 0788...)") },
+                    label = { Text(localizedString("Phone Number")) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.fillMaxWidth()
@@ -384,12 +386,12 @@ fun AddCustomerDialog(
                     }
                 }
             ) {
-                Text("Save Customer")
+                Text(localizedString("Add Customer"))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(localizedString("Cancel"))
             }
         }
     )
@@ -409,7 +411,7 @@ fun DebtReminderDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Send Debt Reminder") },
+        title = { Text(localizedString("Send Reminder")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(

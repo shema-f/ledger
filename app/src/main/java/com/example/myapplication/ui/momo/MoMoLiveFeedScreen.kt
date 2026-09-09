@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import com.example.myapplication.domain.model.Customer
 import com.example.myapplication.domain.model.MoMoLog
 import com.example.myapplication.ui.dashboard.formatCurrency
+import com.example.myapplication.util.LocalStrings
+import com.example.myapplication.util.localizedString
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -112,7 +114,7 @@ fun MoMoLiveFeedContent(
         ) {
             Column {
                 Text(
-                    text = "MoMo Live Feed",
+                    text = localizedString("Incoming Payment Alerts"),
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -262,7 +264,7 @@ fun MoMoLogCard(
                         modifier = Modifier.padding(top = 4.dp)
                     ) {
                         Text(
-                            text = if (log.isReconciled) "RECONCILED" else "PENDING",
+                            text = if (log.isReconciled) localizedString("Auto-Reconciled") else localizedString("Pending Match"),
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                             color = if (log.isReconciled) OnSuccessEmeraldContainer else OnWarningAmberContainer,
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
@@ -306,7 +308,7 @@ fun MoMoLogCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Reconcile to Customer Debt")
+                    Text(localizedString("Assign Transaction"))
                 }
             }
         }

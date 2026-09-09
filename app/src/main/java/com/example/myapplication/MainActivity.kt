@@ -39,6 +39,7 @@ import com.example.myapplication.ui.navigation.AppNavigation
 import com.example.myapplication.ui.reconciliation.SmsReconciliationViewModel
 import com.example.myapplication.ui.reports.ReportsViewModel
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.util.LanguageManager
 
 class MainActivity : FragmentActivity() {
 
@@ -54,6 +55,8 @@ class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        LanguageManager.init(applicationContext)
 
         val database = ImariDatabase.getInstance(applicationContext)
         ledgerRepository = LedgerRepositoryImpl(database.customerDao(), database.ledgerRecordDao())
